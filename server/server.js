@@ -3,12 +3,17 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 require('./db/mongoose');
+// const User = require('./model/userSchema');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+const userRouter = require('./routes/user.route');
+
 app.use(cors());
 app.use(express.json());
+app.use(userRouter);
+
 
 // mongoose.connect(process.env.MONGODB_URI).then(() => {
 //     console.log('MongoDB Connected');
