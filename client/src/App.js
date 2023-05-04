@@ -1,10 +1,11 @@
-import Landing from "./pages/Landing";
+import { Route, Routes } from 'react-router-dom';
+import Landing from './pages/Landing';
 
 function App() {
   return (
-    <div>
-      <Landing />
-    </div>
+    <Routes>
+      <Route path="/" element={<Landing /> } /> 
+    </Routes>
   );
 }
 
