@@ -1,29 +1,77 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Landing() {
-  const getChatID = () => {
+
+  // const [user, setUser] = useState({
+  //   token:""
+  // });
+
+  // let name, value;
+
+  // const handleInputs = (e) => {
+  //   console.log(e);
+
+  //   // u have given name="apitoken" ie attribute is name
+  //   name = e.target.name;     // store
+  //   value = e.target.value;   // it's value
+
+  //   setUser({...user, [name]:value});
+  // }
+
+  const navigate = useNavigate();
+  const url = 'http://localhost:5000';
+
+  const [token, setToken] = useState({});
+
+  const handleToken = (e) => {
+    setToken(e.target.value);
+  };
+
+  const handleGetChatID = async (e) => {
     console.log('Clicked');
+    e.preventDefault();
+    try {
+      const id = {token};
+      const response = await axios.post(`${url}/token`, id, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      console.log(response.data);
+      setToken("");
+      alert('Entered successfully');
+    } catch (error) {
+      setToken("");
+    }
   }
+
   return (
     <div className='h-screen bg-grey'>
       <div className='flex'>
         <div className='w-1/2 text-black text-left p-20'>
-          <div className='font-bold text-5xl leading-normal'>
-            Life changing automation of <p className='bg-gradient-to-r from-purple w-fit'>healthcare</p>
-          </div>
-          <div className='text-4xl font-semibold pt-4 underline'>
-            Get Telegram Chat ID 
-          </div>
-          <div className='font-normal text-3xl pt-4 pb-2'>
-            HTTP API Token
-          </div>
-          <input type='text' name='apitoken' className='p-2 rounded-2xl border-black border-[1px] border-solid w-3/4' placeholder='Your BOT API Token Here. (XXX:YYYYYYY)'/>
-          <br />
-          <button className='p-4 my-4 mr-4 bg-[#1ea624] text-white text-xl font-bold rounded cursor-pointer hover:bg-[#4caf50]' onClick={getChatID}>Get Chat ID</button>
-          <div className='font-normal text-3xl pt-4 pb-2'>
-            The Chat ID = 
-          </div>
-            <input type='text' name='chatid' className='p-2 rounded-2xl border-black border-[1px] border-solid w-3/4' readOnly='true'/>
+          <form>
+            <div className='font-bold text-5xl leading-normal'>
+              Life changing automation of <p className='bg-gradient-to-r from-purple w-fit'>healthcare</p>
+            </div>
+            <div className='text-4xl font-semibold pt-4 underline'>
+              Get Telegram Chat ID 
+            </div>
+            <div className='font-normal text-3xl pt-4 pb-2'>
+              HTTP API Token
+            </div>
+            <input type='text' name='apitoken' className='p-2 rounded-2xl border-black border-[1px] border-solid w-3/4' placeholder='Your BOT API Token Here. (XXX:YYYYYYY)'
+              // value={user.token}
+              onChange={handleToken}
+            />
+            <br />
+            <button className='p-4 my-4 mr-4 bg-[#1ea624] text-white text-xl font-bold rounded cursor-pointer hover:bg-[#4caf50]' onClick={handleGetChatID}>Get Chat ID</button>
+            <div className='font-normal text-3xl pt-4 pb-2'>
+              The Chat ID = 
+            </div>
+              <input type='text' name='chatid' className='p-2 rounded-2xl border-black border-[1px] border-solid w-3/4' readOnly='true'/>
+          </form>
         </div>
         <div className='w-1/2 text-black text-left p-20'>
         <div className='font-bold text-5xl leading-normal'>
