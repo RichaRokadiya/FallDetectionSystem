@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -23,31 +23,78 @@ function Landing() {
   const navigate = useNavigate();
   const url = 'http://localhost:5000';
 
-  const [token, setToken] = useState({});
+  const [token, setToken] = useState("");
+  const [chatID, setChatID] = useState("");
 
   const handleToken = (e) => {
     setToken(e.target.value);
   };
 
   const handleGetChatID = async (e) => {
-    console.log('Clicked');
     e.preventDefault();
+    console.log('Clicked');
+    if(!token) {
+      console.log("Enter a valid token");
+      return;
+    }
     try {
-      const id = {token};
-      const response = await axios.post(`${url}/token`, id, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const resChatId = await getChatID(token);
+      if(resChatId === "") {
+        alert("NO RESPONSE RECEIVED");
+        setChatID("");
+        return;
+      }
+      console.log(resChatId)
+      setChatID(resChatId)
+      const response = await axios.post(`${url}/token`, {chatId: resChatId, token});
       console.log(response.data);
-      setToken("");
-      alert('Entered successfully');
+      // setToken("");
+      if(response.data.data) {
+        alert('Entered successfully');
+      }
     } catch (error) {
-      setToken("");
+      // setToken("");
     }
   }
 
-  return (
+
+  // USING PROMISES
+  // useEffect(() => {
+  //   axios.get('https://api.telegram.org/bot5935524452:AAEWus86_czMovgMNl4rzDUCV6EVcai_WNE/getUpdates')
+  //   .then((res) =>{
+  //     console.log(res.data);
+  //     // if(res.message && res.message.chat && res.message.chat.type && (res.message.chat.type === "group" || res.message.chat.type === "private"))
+  //     // {
+  //     //   console.log(res.message.chat.id);
+  //     // }
+  //   }).catch((error) => {
+  //     console.log(error.message);
+  //   });
+  // }, []);
+
+
+
+  // USING ASYNC AWAIT
+
+  
+  const getChatID = async (chatId) => {
+    try {
+      const response = await axios.get(`https://api.telegram.org/bot${chatId}/getUpdates`);
+      // console.log(response.data);
+      if(response.data.ok === true) {
+        return response.data.result[0].message.chat.id;
+      }
+      else {
+        console.log("API response fail case")
+    return "";
+      }
+    } catch (error) {
+      console.log(error.message);
+  return "";
+    }
+  };
+
+    return (
     <div className='h-screen bg-grey'>
       <div className='flex'>
         <div className='w-1/2 text-black text-left p-20'>
@@ -62,7 +109,7 @@ function Landing() {
               HTTP API Token
             </div>
             <input type='text' name='apitoken' className='p-2 rounded-2xl border-black border-[1px] border-solid w-3/4' placeholder='Your BOT API Token Here. (XXX:YYYYYYY)'
-              // value={user.token}
+              value={token}
               onChange={handleToken}
             />
             <br />
@@ -70,7 +117,7 @@ function Landing() {
             <div className='font-normal text-3xl pt-4 pb-2'>
               The Chat ID = 
             </div>
-              <input type='text' name='chatid' className='p-2 rounded-2xl border-black border-[1px] border-solid w-3/4' readOnly='true'/>
+              <input type='text' name='chatid' value={chatID} className='p-2 rounded-2xl border-black border-[1px] border-solid w-3/4' readOnly='true'/>
           </form>
         </div>
         <div className='w-1/2 text-black text-left p-20'>

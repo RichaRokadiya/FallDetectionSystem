@@ -49,8 +49,8 @@ router.get('/', async (req, res) => {
 
 // ###### Using async await ######
 router.post('/token', async (req, res) => {
-    const { token } = req.body;
-    if(!token) {
+    const { token, chatId } = req.body;
+    if(!token || !chatId) {
         res.status(422).json({ error: "Please enter the token id"});
     }
 
@@ -62,12 +62,11 @@ router.post('/token', async (req, res) => {
         //     return res.status(422).json({ error: "Token already exists"});
         // }
 
-        const user = new User({ token });
-
-        const userToken = await user.save();
+        const user = new User({ token, chatId });
+        await user.save();
 
         if (userToken) {
-            res.status(201).json({ message: "Token entered successfully!" });
+            res.status(201).json({ message: "Token entered successfully!", data: user });
         } else {
             res.status(500).json({ error: "Failed to add token!"});
         }
