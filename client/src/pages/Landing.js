@@ -21,7 +21,7 @@ function Landing() {
   // }
 
   const navigate = useNavigate();
-  const url = 'http://localhost:5000';
+  const url = 'http://localhost:8001';
 
   const [token, setToken] = useState("");
   const [chatID, setChatID] = useState("");
