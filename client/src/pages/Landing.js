@@ -4,22 +4,6 @@ import axios from 'axios';
 
 function Landing() {
 
-  // const [user, setUser] = useState({
-  //   token:""
-  // });
-
-  // let name, value;
-
-  // const handleInputs = (e) => {
-  //   console.log(e);
-
-  //   // u have given name="apitoken" ie attribute is name
-  //   name = e.target.name;     // store
-  //   value = e.target.value;   // it's value
-
-  //   setUser({...user, [name]:value});
-  // }
-
   const navigate = useNavigate();
   const url = 'http://localhost:8001';
 
@@ -56,26 +40,6 @@ function Landing() {
       // setToken("");
     }
   }
-
-
-  // USING PROMISES
-  // useEffect(() => {
-  //   axios.get('https://api.telegram.org/bot5935524452:AAEWus86_czMovgMNl4rzDUCV6EVcai_WNE/getUpdates')
-  //   .then((res) =>{
-  //     console.log(res.data);
-  //     // if(res.message && res.message.chat && res.message.chat.type && (res.message.chat.type === "group" || res.message.chat.type === "private"))
-  //     // {
-  //     //   console.log(res.message.chat.id);
-  //     // }
-  //   }).catch((error) => {
-  //     console.log(error.message);
-  //   });
-  // }, []);
-
-
-
-  // USING ASYNC AWAIT
-
   
   const getChatID = async (chatId) => {
     try {
