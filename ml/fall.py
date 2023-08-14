@@ -23,15 +23,10 @@ def fall(root_folder='ml/videos'):
                     actual.append(1)
                     user=mongo.getUsers()
                     latest=user.iloc[-1]
-                    token = latest.token  # telegram token richa
+                    token = latest.token 
 
-
-                    # token = '6044978924:AAFYmrStr-QQ791-dc5YZDS2N3cqjh7TAuU' # dd
-                    # token = '5605381599:AAF3GNVHMTm6IbPt9RPTQ4SKL6F-2BG-K4I' # ss
-                    # receiver_id = 000000000000 # https://api.telegram.org/bot<TOKEN>/getUpdates
-                    # receiver_id = latest.chatId
-                    # receiver_id = 1378127570 # dd
-                    receiver_id = 1283646099 # ss
+                    # uncomment the below line
+                    # receiver_id = <ID>
 
                     bot = telepot.Bot(token)
 
@@ -51,7 +46,6 @@ def fall(root_folder='ml/videos'):
                         min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
                     # Set up the video capture
-                    # cap = cv2.VideoCapture('D:/IPD/FallDetectionSystem/ml/faaall.mp4')
                     cap = cv2.VideoCapture(video_path)
 
                     # Define some parameters for fall detection
@@ -100,10 +94,6 @@ def fall(root_folder='ml/videos'):
                                         print("Fall")
                                         predicted.append(1)
                                         bot.sendMessage(receiver_id, "Person Fall Detected")
-                                        # filename = "D:\\ws\\opencv\\yolo7\\yolov7\\savedImage.jpg"
-                                        # cv2.imwrite(filename)
-                                        # bot.sendPhoto(receiver_id, photo=open(filename, 'rb'))
-                                        # os.remove(filename)
                                         break
                             else:
                                 is_falling = False
@@ -144,19 +134,6 @@ def fall(root_folder='ml/videos'):
     # Display the confusion matrix
     print("Confusion Matrix:")
     print(cm)
-#     # Extract the values of tokenId and chatId from the request
-#     token_id = request.args.get('tokenId')
-#     chat_id = request.args.get('chatId')
-
-#     # Do something with the token_id and chat_id values
-#     result = my_function(token_id, chat_id)
-    
-#     # Return the result as a JSON response
-#     return {'result': result}
-
-
-# def my_function(token_id, chat_id):
-    # Here is an example function that uses the token_id and chat_id values
     
 if __name__ == '__main__':
     app.run(debug=True)
