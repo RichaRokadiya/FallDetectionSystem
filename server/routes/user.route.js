@@ -24,7 +24,7 @@ router.post('/token', async (req, res) => {
         const user = new User({ token, chatId });
         await user.save();
 
-        if (userToken) {
+        if (token) {
             res.status(201).json({ message: "Token entered successfully!", data: user });
         } else {
             res.status(500).json({ error: "Failed to add token!"});

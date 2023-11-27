@@ -5,7 +5,7 @@ import json
 
 
 def getUsers():
-    client = pymongo.MongoClient(<URL>)
+    client = pymongo.MongoClient("mongodb+srv://falldetectionsystem:DRSFall123@cluster0.5ibeefv.mongodb.net/?retryWrites=true&w=majority")
     db = client['test']
     collection = db["users"]
     allDocs = collection.find()
