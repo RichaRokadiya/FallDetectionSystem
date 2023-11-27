@@ -34,8 +34,14 @@ def fall(root_folder='ml/videos'):
                     # receiver_id = 1283646099 # ss
 
                     bot = telepot.Bot(token)
+                    bot = telepot.Bot(token)
 
 
+                    def angle_of_singleline(point1x, point1y, point2x, point2y, static_image_mode=True):
+                        """ Calculate angle of a single line """
+                        x_diff = point2x - point1x
+                        y_diff = point2y - point1y
+                        return math.degrees(math.atan2(y_diff, x_diff))
                     def angle_of_singleline(point1x, point1y, point2x, point2y, static_image_mode=True):
                         """ Calculate angle of a single line """
                         x_diff = point2x - point1x
@@ -45,7 +51,12 @@ def fall(root_folder='ml/videos'):
 
                     mp_drawing = mp.solutions.drawing_utils
                     mp_pose = mp.solutions.pose
+                    mp_drawing = mp.solutions.drawing_utils
+                    mp_pose = mp.solutions.pose
 
+                    # Initialize the pose detector
+                    pose_detector = mp_pose.Pose(
+                        min_detection_confidence=0.5, min_tracking_confidence=0.5)
                     # Initialize the pose detector
                     pose_detector = mp_pose.Pose(
                         min_detection_confidence=0.5, min_tracking_confidence=0.5)
@@ -59,17 +70,33 @@ def fall(root_folder='ml/videos'):
                     FALL_THRESHOLD = 20
                     fall_count = 0
                     is_falling = False
+                    # Define some parameters for fall detection
+                    # If the angle between the hips and shoulders is less than this value, consider it a fall
+                    FALL_THRESHOLD = 20
+                    fall_count = 0
+                    is_falling = False
 
+                    while True:
+                        # Capture frame-by-frame
+                        ret, frame = cap.read()
                     while True:
                         # Capture frame-by-frame
                         ret, frame = cap.read()
 
                         # Convert the frame to grayscale
                         # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                        # Convert the frame to grayscale
+                        # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
                         # Detect the pose
                         results = pose_detector.process(frame)
+                        # Detect the pose
+                        results = pose_detector.process(frame)
 
+                        # Draw the pose landmarks on the frame
+                        if results.pose_landmarks:
+                            mp_drawing.draw_landmarks(
+                                frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
                         # Draw the pose landmarks on the frame
                         if results.pose_landmarks:
                             mp_drawing.draw_landmarks(
@@ -79,7 +106,21 @@ def fall(root_folder='ml/videos'):
                             knee_landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE]
                             ankle_landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE]
                             # middle_landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP]
+                            # Get the landmarks for the hips, shoulders, and middle of the body
+                            knee_landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE]
+                            ankle_landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE]
+                            # middle_landmark = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP]
 
+                            # Calculate the angle between the hips and shoulders
+                            # angle = abs(hip_landmark.y - shoulder_landmark.y)
+                            angle = angle_of_singleline(
+                                knee_landmark.x, knee_landmark.y, ankle_landmark.x, ankle_landmark.y)
+                            print(angle)
+                            # Check if the angle is less than the threshold
+                            if angle < FALL_THRESHOLD or angle > 180-FALL_THRESHOLD:
+                                # If we're not already falling, increment the fall count
+                                start_time = time.time()
+                                print(start_time)
                             # Calculate the angle between the hips and shoulders
                             # angle = abs(hip_landmark.y - shoulder_landmark.y)
                             angle = angle_of_singleline(
